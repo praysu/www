@@ -12,7 +12,11 @@ require_once(WWW . '/include/Session.php');
 
 require_once(WWW . '/include/Functions.php');
 
+require_once(WWW . '/include/helpers/Permissions.php');
 
+require_once(WWW . '/include/helpers/Page.php');
+
+require_once(WWW . '/include/helpers/Password.php');
 
 // Include objects
 _log('Including objects...');

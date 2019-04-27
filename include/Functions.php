@@ -71,3 +71,29 @@ function RandomString($length = 10) {
     }
     return $randomString;
 }
+
+/*
+ * Get Name of a given page id or name
+*/
+function GetPageName($identifier)
+{
+	$pagearray = 	['Home', 'Login', 'Register'];
+	$required = array(null, null, ['/css/addons/register.css']);
+	$page = 'Error';
+	if(!is_numeric($identifier)) {
+		for($i = 0; $i < count($pagearray); $i++) {
+			if(strtolower($pagearray[$i]) == strtolower($identifier)) {
+				$page = strtolower($identifier);
+				$_SESSION['required'] = $required[$i];
+			}
+		}
+	}
+	else if(intval($identifier) < count($pagearray)) {
+		$page = $pagearray[intval($identifier)];
+		$_SESSION['required'] = $required[intval($identifier)];
+	}
+	
+	return $page;
+}
+
+_log('Functions.php Loaded...');

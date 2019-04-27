@@ -6,6 +6,8 @@ class User
 	
 	public $name;
 	
+	public $hash;
+	
 	public $discord;
 	
 	public $registered;
@@ -30,6 +32,7 @@ class User
 		
 		$this->id = $user['id'];
 		$this->name = $user['name'];
+		$this->hash = $user['hash'];
 		$this->discord = $user['discord'];
 		$this->registered = $user['registered'];
 		$this->page = $user['page'];
@@ -43,7 +46,6 @@ class User
 	public static function Create($name, $hash, $discord)
 	{
 		try {
-			
 			// Check some things
 			if(self::Exists($name)) {
 				throw new Exception('User already registered...');
@@ -63,10 +65,11 @@ class User
 			$success = self::Exists($userid);
 			
 			if(!$success) {
-				throw new Exception('User('. $userid .') could not be created...');
+				throw new Exception('User('. $name .','. $hash .','. $discord .') could not be created...');
 			}
 			
 			_log('User ' . $userid . ' created...');
+			
 			foreach(GAMEMODES as $mode) {
 				_log('  Creating stats_' . $mode . '...');
 				SQLe('INSERT INTO stats_' . $mode . ' (`id`) VALUES (?)', [$userid]);
@@ -76,6 +79,7 @@ class User
 			
 			Status('User created, you can now <a href="/Login">log in</a>!', true);
 		} catch(Exception $e) {
+			_log('Error creating user: '. $e->GetMessage());
 			Status($e->GetMessage(), false);
 		}
 		
@@ -93,3 +97,5 @@ class User
 		return SQLf('SELECT * FROM user WHERE id = ? OR name = ?', [$identifier, $identifier]);
 	}
 }
+
+_log('User.php Loaded...');

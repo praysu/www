@@ -17,5 +17,5 @@ class Session {
 	}
 	
 }
-
+_log('Session.php Loaded...');
 ?>
