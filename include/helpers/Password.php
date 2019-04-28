@@ -18,7 +18,6 @@ class Password {
 		
 		return (bool) password_verify($md5, $salt);
 	}
-	
 }
 _log('Password.php Loaded...');
 ?>

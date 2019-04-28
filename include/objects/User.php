@@ -20,6 +20,9 @@ class User
 	
 	public $permissionsText;
 	
+	public $key;
+
+	public $invites;
 	
 	public function __construct($identifier) {
 		
@@ -39,6 +42,9 @@ class User
 		$this->status = $user['status'];
 		$this->permissions = $user['permissions'];
 		$this->permissionsText = Permissions::Text($this->permissions);
+		$this->key = $user['key'];
+		$this->invites = $user['invites'];
+		$this->invite_success = $user['invite_success'];
 	}
 	
 	// Creates user using name, hash and discord
@@ -56,6 +62,10 @@ class User
 			}
 			
 			$key = RandomString(20);
+			
+			while(SQLf('SELECT * FROM user WHERE key = ?', [$key])) {
+				$key = RandomString(20);
+			}
 			
 			// Try to insert user
 			SQLe('INSERT INTO user (`name`, `hash`, `discord`, `key`) VALUES (?, ?, ?, ?)', [$name, $hash, $discord, $key]);
@@ -86,15 +96,15 @@ class User
 	}
 
 	public static function Exists($identifier) {
-		return (bool)SQLf('SELECT * FROM user WHERE id = ? OR name = ?', [$identifier, $identifier]);
+		return (bool)SQLf('SELECT * FROM user WHERE id = ? OR LOWER(name) = LOWER(?)', [$identifier, $identifier]);
 	}
 	
 	public static function ExistsDiscord($identifier) {
-		return (bool) SQLf('SELECT * FROM user WHERE discord = ?', [$identifier]);
+		return (bool) SQLf('SELECT * FROM user WHERE LOWER(discord) = LOWER(?)', [$identifier]);
 	}
 	
 	public static function Get($identifier) {
-		return SQLf('SELECT * FROM user WHERE id = ? OR name = ?', [$identifier, $identifier]);
+		return SQLf('SELECT * FROM user WHERE id = ? OR LOWER(name) = LOWER(?)', [$identifier, $identifier]);
 	}
 }
 

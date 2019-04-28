@@ -1,0 +1,8 @@
+
+RewriteEngine On
+RewriteBase /
+
+# invite links
+RewriteRule ^Register/([\w]{20})$ index.php?p=Register&invite=$1 [L]
+
+RewriteRule ^(\w+)$ index.php?p=$1 [L]

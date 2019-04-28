@@ -34,16 +34,16 @@ function Redirect($location)
 
 function Location($path)
 {
-	if($path[0] == '/') {
-		$path = substr($path, 1);
+	if($path[0] != '/') {
+		$path = '/' . $path;
 	}
-	$_SESSION['location'] = $path;
+	Session::Set('location', $path);
 }
 
 function Status($status, $success = TRUE)
 {
-	$_SESSION['success'] = $success;
-	$_SESSION['status'] = $status;
+	Session::Set('success', $success);
+	Session::Set('status', $status);
 }
 
 /*
@@ -52,9 +52,10 @@ function Status($status, $success = TRUE)
 function Back()
 {
 	if(isset($_SESSION['location'])) {
-		Redirect(WEB . $_SESSION['location']);
+		Redirect(WEB . Session::Get('location'));
 	}
 	else {
+		Status('You weren\'t meant to be here... We\'ll put you back home just in case...', false);
 		Redirect(WEB);
 	}
 }
@@ -77,20 +78,23 @@ function RandomString($length = 10) {
 */
 function GetPageName($identifier)
 {
-	$pagearray = 	['Home', 'Login', 'Register'];
-	$required = array(null, null, ['/css/addons/register.css']);
+	$pagearray = 	['Home', 'Register', 'Login', 'Invite'];
+	$required = array(null, 
+						['/css/addons/register.css'],
+						['/css/addons/register.css'],
+						null);
 	$page = 'Error';
 	if(!is_numeric($identifier)) {
 		for($i = 0; $i < count($pagearray); $i++) {
 			if(strtolower($pagearray[$i]) == strtolower($identifier)) {
 				$page = strtolower($identifier);
-				$_SESSION['required'] = $required[$i];
+				Session::Set('required', $required[$i]);
 			}
 		}
 	}
 	else if(intval($identifier) < count($pagearray)) {
 		$page = $pagearray[intval($identifier)];
-		$_SESSION['required'] = $required[intval($identifier)];
+		Session::Set('required', $required[intval($identifier)]);
 	}
 	
 	return $page;
